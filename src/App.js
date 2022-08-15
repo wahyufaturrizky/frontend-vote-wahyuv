@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import { login } from "./services/handler";
 
 function App() {
+  const [isLoading, setIsLoading] = useState(false);
+  const handleSubmit = async (event) => {
+    try {
+      event.preventDefault();
+
+      const data = {
+        [event.target[0].name]: event.target[0].value,
+        [event.target[1].name]: event.target[1].value,
+      };
+
+      const resPromise = await login(data);
+      const res = await resPromise.json();
+    } catch (error) {}
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <form onSub onSubmit={handleSubmit}>
+        <label>Username</label>
+        <div>
+          <input type="text" name="username" />
+        </div>
+
+        <label>Password</label>
+        <div>
+          <input type="password" name="password" />
+        </div>
+
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 }
